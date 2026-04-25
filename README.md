@@ -21,6 +21,13 @@ CUDA_VISIBLE_DEVICES=0 torchrun --master_port=7778 --nproc_per_node=1 train.py -
 ```
 ├── train.py
 ├── requirements.txt
+├── amia-public-challenge-2024/
+│   ├── annotations/
+│   ├── test/
+│   └── train/
+├── ChestX_Det/
+│   ├── annotations/
+│   └── images/
 ├── configs/
 │   ├── base/
 │   ├── cfg/
