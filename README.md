@@ -4,6 +4,11 @@
 
 Model weights and pretrained weights are available on [Hugging Face](https://huggingface.co/Lin-Mars/Hyper-DSCNet).
 
+## Datasets
+
+- [ChestX_Det](https://huggingface.co/datasets/Lin-Mars/ChestX_Det)
+- [amia-public-challenge-2024](https://www.kaggle.com/competitions/amia-public-challenge-2024/data)
+
 ## Training
 
 ```bash
