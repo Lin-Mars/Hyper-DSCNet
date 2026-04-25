@@ -13,5 +13,5 @@ CUDA_VISIBLE_DEVICES=0 torchrun --master_port=7777 --nproc_per_node=1 train.py -
 ## Testing
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 torchrun --master_port=7778 --nproc_per_node=1 train.py -c configs/yaml/deim_dfine_hgnetv2_s.yml --test-only -r dfine-s-hyperACE+p2.pth
+CUDA_VISIBLE_DEVICES=0 torchrun --master_port=7778 --nproc_per_node=1 train.py -c configs/yaml/deim_dfine_hgnetv2_s.yml --test-only -r Hyper-DSCNet.pth
 ```
