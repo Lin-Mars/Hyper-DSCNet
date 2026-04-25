@@ -43,10 +43,10 @@ CUDA_VISIBLE_DEVICES=0 torchrun --master_port=7778 --nproc_per_node=1 train.py -
 │   ├── optim/
 │   └── solver/
 ├── compile_module/
-│   ├── DCNv4_op/
-│   └── ops_dscn/
 ├── tools/
 │   ├── inference/
 │   └── visualization/
 └── weight/
+    └── hgnetv2/
+        └── PPHGNetV2_B0_stage1.pth
 ```
