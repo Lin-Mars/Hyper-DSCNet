@@ -1,0 +1,58 @@
+backbone:
+  # [from, module, args]
+  - [-1, StemBlock, [16, 16, True]] # 0-P2/4
+  - [-1, HG_Stage, [16, 64, 1, 3, False, False, 3, True, 'se']] # 1-P2/4
+  - [-1, HG_Stage, [32, 256, 1, 3, True, False, 3, True, 'se']] # 2-P3/8
+  - [-1, HG_Stage, [64, 512, 2, 3, True, True, 5, True, 'se']]  # 3-P4/16
+  - [-1, HG_Stage, [128, 1024, 1, 3, True, True, 5, True, 'se']] # 4-P5/32
+
+encoder:
+  - [1, ConvNormLayer_fuse, [256, 1, 1]] # 5-P2/4
+  - [2, ConvNormLayer_fuse, [256, 1, 1]] # 6-P3/8
+  - [3, ConvNormLayer_fuse, [256, 1, 1]] # 7-P4/16
+  - [4, ConvNormLayer_fuse, [256, 1, 1]] # 8-P5/32
+
+  - [-1, TransformerEncoderBlock, [8, 1024, 0.1, "relu", 10000, False]] # 9-P5/32
+
+  - [[6, 7, 9], MFA, [256, 1, 8, True, True]] # 10-P4/16
+  - [-1, nn.Upsample, [None, 2, "nearest"]] # 11-P3/8
+  - [10, DownsampleConv, []] # 12-P5/32
+
+  - [[6, 11], GatedFusion, []] # 13-P3/8
+  - [[7, 10], GatedFusion, []] # 14-P4/16
+  - [[9, 12], GatedFusion, []] # 15-P5/32
+
+  - [-1, ConvNormLayer_fuse, [256, 1, 1]]
+  - [-1, nn.Upsample, [None, 2, "nearest"]]
+  - [[-1, 14], Concat, []] # 18-P4/16
+  - [-1, RepNCSPELAN4, [256, 512, 64, 1, False, 'silu']] # 19-P4/16
+  - [[-1, 10], GatedFusion, []] # 20
+
+  - [-1, ConvNormLayer_fuse, [256, 1, 1]]
+  - [-1, nn.Upsample, [None, 2, "nearest"]]
+  - [[-1, 13], Concat, []] # 23-P3/8
+  - [-1, RepNCSPELAN4, [256, 512, 64, 1, False, 'silu']] # 24-P3/8
+  - [[-1, 11], GatedFusion, []] # 25
+
+  - [-1, ConvNormLayer_fuse, [256, 1, 1]]
+  - [-1, nn.Upsample, [None, 2, "nearest"]]
+  - [[-1, 5], Concat, []] # 28-P2/4
+  - [-1, RepNCSPELAN4, [256, 512, 64, 1, False, 'silu']] # 29-P2/4
+
+  - [-1, SCDown, [256, 3, 2, 'silu']] # 30-P3/8
+  - [[-1, 26], Concat, []] # 31-P3/8
+  - [-1, RepNCSPELAN4, [256, 512, 64, 1, False, 'silu']] # 32-P3/8
+  - [[-1, 11], GatedFusion, []] # 33
+
+  - [-1, SCDown, [256, 3, 2, 'silu']] # 34-P4/16
+  - [[-1, 21], Concat, []] # 35-P4/16
+  - [-1, RepNCSPELAN4, [256, 512, 64, 1, False, 'silu']] # 36-P4/16
+  - [[-1, 10], GatedFusion, []] # 37
+
+  - [-1, SCDown, [256, 3, 2, 'silu']] # 38-P5/32
+  - [[-1, 16], Concat, []] # 39-P5/32
+  - [-1, RepNCSPELAN4, [256, 512, 64, 1, False, 'silu']] # 40-P5/32
+  - [[-1, 12], GatedFusion, []] # 41
+
+decoder:
+  - [[29, 33, 37, 41], DFINETransformer, {"feat_strides":[4, 8, 16, 32], "hidden_dim": 256, "num_levels": 4, "num_layers": 3, "num_points": [3, 3, 6, 3], "dim_feedforward": 1024}]

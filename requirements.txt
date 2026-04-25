@@ -1,0 +1,8 @@
+torch>=2.0.0
+torchvision>=0.15.0
+PyYAML
+scipy
+tensorboard
+faster-coco-eval>=1.6.5
+einops
+prettytable
